@@ -31,7 +31,7 @@ int main()
     cin.tie(NULL);
     cout.tie(NULL);
 
-    cin >> N, M;
+    cin >> N >> M;
     string tmp;
 
     for (int i = 0; i < N; i++)
