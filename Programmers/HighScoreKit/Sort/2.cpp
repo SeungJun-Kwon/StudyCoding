@@ -5,8 +5,19 @@
 
 using namespace std;
 
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
 string solution(vector<int> numbers) {
     string answer = "";
+    int sum = 0;
+    for(auto i : numbers)
+        sum += i;
+    if(sum == 0)
+        return "0";
     
     vector<string> v;
     
@@ -18,15 +29,7 @@ string solution(vector<int> numbers) {
     
     struct {
         bool operator()(string a, string b) {
-            cout << a << " " << b << "\n";
-            if(a + b >= b + a) {
-                cout << a + b << "\n";
-                return a >= b;
-            }
-            else {
-                cout << b + a << "\n";
-                return b < a;
-            }
+            return a + b > b + a;
         }
     } compare;
     
