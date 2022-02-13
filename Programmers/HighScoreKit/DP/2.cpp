@@ -1,39 +1,32 @@
 #include <string>
 #include <vector>
-#include <queue>
 
 using namespace std;
 
-int solution(vector<int> priorities, int location) {
-    int answer = 1, max = 0;
+int solution(vector<vector<int>> triangle) {
+    int answer = 0, n = triangle.size();
     
-    queue<pair<int, int>> q;
+    vector<vector<int>> dp(n, vector<int>(n, 0));
     
-    for(int i = 0; i < priorities.size(); i++) {
-        q.push({priorities[i], i});
-        if(max < priorities[i])
-            max = priorities[i];
-    }
+    dp[0][0] = triangle[0][0];
     
-    while(!q.empty()) {
-        int p = q.front().first;
-        int idx = q.front().second;
-        q.pop();
-        
-        if(p == max) {
-            if(idx == location) break;
-            max = 0;
-            queue<pair<int, int>> tmp = q;
-            while(!tmp.empty()) {
-                if(tmp.front().first > max)
-                    max = tmp.front().first;
-                tmp.pop();
+    for(int i = 1; i < n; i++)
+        for(int j = 0; j <= i; j++) {
+            if(j == 0)
+                dp[i][j] = dp[i - 1][j] + triangle[i][j];
+            else if (j == i)
+                dp[i][j] = dp[i - 1][j - 1] + triangle[i][j];
+            else {
+                int max = dp[i - 1][j - 1];
+                if(max < dp[i - 1][j])
+                    max = dp[i - 1][j];
+                dp[i][j] = max + triangle[i][j];       
             }
-            answer++;
         }
-        else
-            q.push({p, idx});
-    }
+    
+    for(int i = 0; i < n; i++)
+        if(answer < dp[n - 1][i])
+            answer = dp[n - 1][i];
     
     return answer;
 }
