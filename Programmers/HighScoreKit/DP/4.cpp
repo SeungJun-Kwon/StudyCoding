@@ -1,29 +1,26 @@
 #include <string>
 #include <vector>
-#include <stack>
+#include <algorithm>
 
 using namespace std;
 
-vector<int> solution(vector<int> prices) {
-    int n = prices.size();
-    vector<int> answer(n);
+int solution(vector<int> money) {
+    int answer = 0, n = money.size();
     
-    stack<int> s;
-    s.push(0);
+    vector<int> dp_1(n, 0), dp_2(n, 0);
     
-    for(int i = 1; i < n; i++) {
-        while(!s.empty() && prices[s.top()] > prices[i]) {
-            answer[s.top()] = i - s.top();
-            s.pop();
-        }
-        
-        s.push(i);
-    }
+    dp_1[0] = money[0];
+    dp_1[1] = 0;
+    dp_1[2] = money[0] + money[2];
+    dp_2[0] = 0;
+    dp_2[1] = money[1];
     
-    while(!s.empty()) {
-        answer[s.top()] = n - s.top() - 1;
-        s.pop();
-    }
+    for(int i = 3; i < n - 1; i++)
+        dp_1[i] = max({dp_1[i - 1], dp_1[i - 2] + money[i], dp_1[i - 3] + money[i]});
+    for(int i = 2; i < n; i++)
+        dp_2[i] = max(dp_2[i - 1], dp_2[i - 2] + money[i]);
+    
+    answer = max(dp_1[n - 2], dp_2[n - 1]);
     
     return answer;
 }
