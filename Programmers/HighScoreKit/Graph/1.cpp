@@ -5,52 +5,46 @@
 
 using namespace std;
 
-bool compare(vector<int> a, vector<int> b) {
-    if(a[0] > a[1]) {
-        int tmp = a[0];
-        a[0] = a[1];
-        a[1] = tmp;
-    }
-    if(b[0] > b[1]) {
-        int tmp = b[0];
-        b[0] = b[1];
-        b[1] = tmp;
-    }
-    
-    return a < b;
+int getMax(int max, int num) {
+    if(max < num)
+        return num;
+    return max;
 }
 
 int solution(int n, vector<vector<int>> edge) {
-    int answer = 0, max = 0;
+    int answer = 0, max = 1;
     
     vector<bool> visited(n + 1, false);
-    vector<int> distance(n + 1, 0);
-    vector<int> point;
+    vector<int> dist(n + 1, 0);
+    vector<vector<int>> graph(n + 1);
+    queue<int> q;
     
-    sort(edge.begin(), edge.end(), compare);
+    for(auto i : edge) {
+        graph[i[0]].push_back(i[1]);
+        graph[i[1]].push_back(i[0]);
+    }
     
-    visited[0] = true;
+    q.push(1);
     visited[1] = true;
     
-    for(int i = 0; i < edge.size(); i++) {
-        point = edge[i];
+    while(!q.empty()) {
+        int point = q.front();
+        q.pop();
+
+        visited[point] = true;
         
-        if(!visited[point[1]] && !visited[point[0]])
-            continue;
-        else {
-            visited[point[1]] = true;
-            if(distance[point[1]] == 0)
-                distance[point[1]] = distance[point[0]] + 1;
-            else if(distance[point[1]] > distance[point[0]] + 1)
-                distance[point[1]] = distance[point[0]] + 1;
-            printf("[%d, %d] -> %d\n", point[0], point[1], distance[point[1]]);
-            if(max < distance[point[1]])
-                max = distance[point[1]];
+        for(auto i : graph[point]) {
+            if(visited[i])
+                continue;
+            visited[i] = true;
+            dist[i] = dist[point] + 1;
+            max = getMax(max, dist[i]);
+            q.push(i);
         }
     }
     
     for(int i = 1; i <= n; i++)
-        if(max == distance[i])
+        if(max == dist[i])
             answer++;
     
     return answer;
