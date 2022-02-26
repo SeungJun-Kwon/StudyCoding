@@ -9,7 +9,7 @@ long long solution(int n, vector<int> times) {
     
     sort(times.begin(), times.end());
     
-    long long left = 1, right = times[times.size() - 1] * n, mid, cnt = 0;
+    long long left = 1, right = (long long) times[times.size() - 1] * (long long) n, mid, cnt = 0;
     
     while(left <= right) {
         mid = (left + right) / 2;
