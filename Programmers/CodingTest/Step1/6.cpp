@@ -2,6 +2,8 @@
 #include <vector>
 #include <sstream>
 #include <time.h>
+#include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -22,6 +24,12 @@ struct tm makeTime(int y, int m, int d, int hh, int mm, int ss, int diff_ss) {
     return tm;
 }
 
+bool chk(pair<vector<int>, vector<int>> a, vector<int> b) {
+    if(b >= a.first && b <= a.second)
+        return true;
+    return false;
+}
+
 int solution(vector<string> lines) {
     int answer = 0;
     
@@ -31,8 +39,8 @@ int solution(vector<string> lines) {
     vector<pair<struct tm, struct tm>> tm_v;
     
     int yyyy, mm, dd;
-    int hour, min, sec, start_mSec, end_mSec;
-    int t_sec, t_mSec;
+    int hour, min, sec, t_sec;
+    double start_mSec = 0, end_mSec = 0, t_mSec = 0;
     int cnt = 0;
     
     for(auto i : lines) {
@@ -48,15 +56,17 @@ int solution(vector<string> lines) {
         hour = stoi(s.substr(0, 2));
         min = stoi(s.substr(3, 2));
         sec = stoi(s.substr(6, 2));
-        end_mSec = stoi(s.substr(9));
+        end_mSec = stod(s.substr(6)) - sec;
+        end_mSec *= 1000;
         
         ss >> s;
         s.erase(s.size() - 1, 1);
         t_sec = stoi(s.substr(0, 1));
         if(s.size() > 2)
-            t_mSec = stoi(s.substr(2));
+            t_mSec = stod(s.substr(0)) - t_sec;
         else
             t_mSec = 0;
+        t_mSec *= 1000;
         
         end = makeTime(yyyy, mm, dd, hour, min, sec, 0);
         
@@ -70,24 +80,71 @@ int solution(vector<string> lines) {
         }
         
         start_v = {start.tm_year, start.tm_mon, start.tm_mday,
-                   start.tm_hour, start.tm_min, start.tm_sec, start_mSec};
+                   start.tm_hour, start.tm_min, start.tm_sec, (int)round(start_mSec)};
         end_v = {end.tm_year, end.tm_mon, end.tm_mday,
-                end.tm_hour, end.tm_min, end.tm_sec, end_mSec};
+                end.tm_hour, end.tm_min, end.tm_sec, (int)round(end_mSec)};
         
         time_v.push_back({start_v, end_v});
         tm_v.push_back({start, end});
     }
     
     for(int i = 0; i < tm_v.size(); i++) {
-        cnt = 0;
+        // 해당 index의 요청 시간 -1 범위
+        cnt = 1;
         cmp_tm = tm_v[i].first;
         cmp_tm.tm_sec -= 1;
         mktime(&cmp_tm);
         cmp_v = {cmp_tm.tm_year, cmp_tm.tm_mon, cmp_tm.tm_mday,
-                cmp_tm.tm_hour, cmp_tm.tm_min, cmp_tm.tm_sec, end_mSec};
-        for(int j = i - 1; j >= 0; j--) {
-            
+                cmp_tm.tm_hour, cmp_tm.tm_min, cmp_tm.tm_sec, time_v[i].first[6] + 1};
+        for(int j = 0; j < tm_v.size(); j++) {
+            if(j == i)  continue;
+            if(chk(time_v[j], cmp_v) || chk(time_v[j], time_v[i].first))
+                cnt++;
         }
+        answer = max(answer, cnt);
+        
+        // 해당 index의 요청시간 +1 범위
+        cnt = 1;
+        cmp_tm = tm_v[i].first;
+        cmp_tm.tm_sec += 1;
+        mktime(&cmp_tm);
+        cmp_v = {cmp_tm.tm_year, cmp_tm.tm_mon, cmp_tm.tm_mday,
+                cmp_tm.tm_hour, cmp_tm.tm_min, cmp_tm.tm_sec, time_v[i].first[6] - 1};
+        for(int j = 0; j < tm_v.size(); j++) {
+            if(j == i)  continue;
+            if(chk(time_v[j], cmp_v) || chk(time_v[j], time_v[i].first))
+                cnt++;
+        }
+        answer = max(answer, cnt);
+
+        // 해당 index의 응답완료시간 -1 범위
+        cnt = 1;
+        cmp_tm = tm_v[i].second;
+        cmp_tm.tm_sec -= 1;
+        mktime(&cmp_tm);
+        cmp_v = {cmp_tm.tm_year, cmp_tm.tm_mon, cmp_tm.tm_mday,
+                cmp_tm.tm_hour, cmp_tm.tm_min, cmp_tm.tm_sec, time_v[i].first[6] + 1};
+        
+        for(int j = 0; j < tm_v.size(); j++) {
+            if(j == i)  continue;
+            if(chk(time_v[j], cmp_v) || chk(time_v[j], time_v[i].second))
+                cnt++;
+        }
+        answer = max(answer, cnt);
+
+        // 해당 index의 응답완료시간 +1 범위
+        cnt = 1;
+        cmp_tm = tm_v[i].second;
+        cmp_tm.tm_sec += 1;
+        mktime(&cmp_tm);
+        cmp_v = {cmp_tm.tm_year, cmp_tm.tm_mon, cmp_tm.tm_mday,
+                cmp_tm.tm_hour, cmp_tm.tm_min, cmp_tm.tm_sec, time_v[i].second[6] - 1};
+        for(int j = 0; j < tm_v.size(); j++) {
+            if(j == i)  continue;
+            if(chk(time_v[j], cmp_v) || chk(time_v[j], time_v[i].second))
+                cnt++;
+        }
+        answer = max(answer, cnt);
     }
     
     return answer;
