@@ -1,53 +1,35 @@
 #include <string>
 #include <vector>
-#include <unordered_map>
-#include <math.h>
+#include <stack>
 
 using namespace std;
 
-unordered_map<string, int> mapInit() {
-    unordered_map<string, int> um;
+int solution(vector<vector<int>> board, vector<int> moves) {
+    int answer = 0, size = board.size();
     
-    um["zero"] = 0;
-    um["one"] = 1;
-    um["two"] = 2;
-    um["three"] = 3;
-    um["four"] = 4;
-    um["five"] = 5;
-    um["six"] = 6;
-    um["seven"] = 7;
-    um["eight"] = 8;
-    um["nine"] = 9;
+    vector<stack<int>> dollBox(size);
     
-    return um;
-}
-
-int solution(string s) {
-    int answer = 0;
-    string tmp = "";
+    for(int i = size - 1; i >= 0; i--)
+        for(int j = 0; j < board[i].size(); j++)
+            if(board[i][j])
+                dollBox[j].push(board[i][j]);
     
-    unordered_map<string, int> nm;
+    stack<int> basket;
     
-    nm = mapInit();
-    
-    for(int i = 0; i < s.size(); i++) {
-        tmp = "";
+    for(int i = 0; i < moves.size(); i++) {
+        int num = moves[i] - 1;
+        if(dollBox[num].empty())
+            continue;
+        int doll = dollBox[num].top();
+        dollBox[num].pop();
         
-        if(s[i] > 9)
-            for(int j = i; j < s.size(); j++) {
-                if(s[j] <= 9)
-                    break;
-                tmp += s[j];
-                auto iter = nm.find(tmp);
-                if(iter != nm.end()) {
-                    s.erase(i + 1, j - i);
-                    s[i] = iter->second + '0';
-                }
-            }
+        if(!basket.empty() && basket.top() == doll) {
+            basket.pop();
+            answer += 2;
+        }
+        else
+            basket.push(doll);
     }
     
-    for(int i = 0; i < s.size(); i++)
-        answer += (s[i] - '0') * pow(10, s.size() - i - 1);
-        
     return answer;
 }
