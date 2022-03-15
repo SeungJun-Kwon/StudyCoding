@@ -1,29 +1,26 @@
 #include <string>
 #include <vector>
-#include <algorithm>
 
 using namespace std;
 
-int gcd(int a, int b) {
-	int c;
-	while (b != 0) {
-		c = a % b;
-		a = b;
-		b = c;
-	}
+string solution(int n) {
+    string answer = "";
     
-	return a;
-}
-
-long long solution(int w,int h) {
-    long long answer = (long long) w * h;
+    int q = n, r = 0;
     
-    int x = gcd(w, h);
-    
-    int width = w / x;
-    int height = h / x;
-    
-    answer = answer - (width + height - 1) * x;
+    while(q) {
+        r = q % 3;
+        q = q / 3;
+        
+        if(r == 0) {
+            answer = '4' + answer;
+            q -= 1;
+        }
+        else if(r == 1)
+            answer = '1' + answer;
+        else
+            answer = '2' + answer;
+    }
     
     return answer;
 }
