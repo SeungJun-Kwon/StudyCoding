@@ -1,0 +1,46 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+public class Problem_10845 {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        scanner.nextLine();
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < n; i++) {
+            String input = scanner.nextLine();
+            String[] values = input.split(" ");
+            if (values.length > 1) {
+                int value = Integer.parseInt(values[1]);
+                queue.addLast(value);
+            } else {
+                switch (input) {
+                    case "size":
+                        sb.append(queue.size() + "\n");
+                        break;
+                    case "empty":
+                        sb.append(!queue.isEmpty() ? 0 + "\n" : 1 + "\n");
+                        break;
+                    case "front":
+                        sb.append(!queue.isEmpty() ? queue.getFirst() + "\n" : -1 + "\n");
+                        break;
+                    case "back":
+                        sb.append(!queue.isEmpty() ? queue.getLast() + "\n" : -1 + "\n");
+                        break;
+                    case "pop":
+                        sb.append(!queue.isEmpty() ? queue.removeFirst() + "\n" : -1 + "\n");
+                        break;
+                }
+            }
+        }
+
+        scanner.close();
+        System.out.println(sb);
+    }
+}
