@@ -1,9 +1,5 @@
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
 import java.util.Scanner;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class Problem_10845 {
     public static void main(String[] args) throws Exception {
