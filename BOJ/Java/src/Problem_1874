@@ -1,0 +1,47 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class Problem_1874 {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        Stack<Integer> stack = new Stack<>();
+        int high = 0;
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        for(int i = 0; i < n; i++) {
+            int number = scanner.nextInt();
+            scanner.nextLine();
+
+            if(stack.empty()) {
+                for(int j = high + 1; j <= number; j++) {
+                    sb.append("+\n");
+                    stack.push(j);
+                }
+                high = number;
+            }
+            else if(number > stack.peek()) {
+                for(int j = high + 1; j <= number; j++) {
+                    sb.append("+\n");
+                    stack.push(j);
+                }
+                high = number;
+            }
+
+            if(number != stack.peek()) {
+                sb = new StringBuilder("NO");
+                break;
+            }
+
+            sb.append("-\n");
+            stack.pop();
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+}
