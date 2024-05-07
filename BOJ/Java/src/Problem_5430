@@ -1,0 +1,85 @@
+import java.util.Scanner;
+
+public class Problem_5430 {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            String operation = scanner.nextLine();
+
+            int start = 0;
+            int max = scanner.nextInt();
+            int end = max - 1;
+            scanner.nextLine();
+
+            // 방향(정방향인지 역방향인지)
+            Character dir = 'R';
+
+            Boolean flag = true;
+
+            String input = scanner.nextLine();
+            input = input.substring(1, input.length() - 1);
+            String[] numbers = input.split(",");
+
+            for (int j = 0; j < operation.length(); j++) {
+                if (operation.charAt(j) == 'R') {
+                    int tmp = start;
+                    start = end;
+                    end = tmp;
+
+                    switch (dir) {
+                        case 'R':
+                            dir = 'L';
+                            break;
+                        case 'L':
+                            dir = 'R';
+                            break;
+                    }
+                } else if (operation.charAt(j) == 'D') {
+                    // 뒤집히지 않은 경우(정방향)
+                    if (start <= end && dir == 'R') {
+                        start++;
+                    }
+                    // 뒤집은 경우(역방향)
+                    else if (start >= end && dir == 'L') {
+                        start--;
+                    } else {
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!flag) {
+                sb.append("error\n");
+            } else {
+                sb.append("[");
+
+                int j;
+                if (start <= end && dir == 'R') {
+                    for (j = start; j < end; j++) {
+                        sb.append(numbers[j] + ",");
+                    }
+
+                    sb.append(numbers[j]);
+                } else if (start >= end && dir == 'L') {
+                    for (j = start; j > end; j--) {
+                        sb.append(numbers[j] + ",");
+                    }
+
+                    sb.append(numbers[j]);
+                }
+
+                sb.append("]\n");
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+}
