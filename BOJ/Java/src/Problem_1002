@@ -1,0 +1,50 @@
+import java.util.Scanner;
+
+public class Problem_1002 {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            int x1 = scanner.nextInt();
+            int y1 = scanner.nextInt();
+            int r1 = scanner.nextInt();
+            
+            int x2 = scanner.nextInt();
+            int y2 = scanner.nextInt();
+            int r2 = scanner.nextInt();
+            scanner.nextLine();
+
+            if(x1 == x2 && y1 == y2) {
+                if(r1 == r2) {
+                    sb.append("-1\n");
+                }
+                else if(r1 != r2) {
+                    sb.append("0\n");
+                }
+                continue;
+            }
+
+            double distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+            if(distance == r1 + r2 || distance == Math.abs(r1 - r2)) {
+                sb.append("1");
+            }
+            else if(distance > r1 + r2 || distance < Math.abs(r1 - r2)) {
+                sb.append("0");
+            }
+            else {
+                sb.append("2");
+            }
+
+            sb.append("\n");
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+}
