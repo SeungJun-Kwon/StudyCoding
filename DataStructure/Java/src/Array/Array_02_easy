@@ -1,0 +1,68 @@
+package Array;
+
+import java.util.Scanner;
+
+public class Array_02_easy {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < t; i++) {
+            int n = scanner.nextInt();
+            scanner.nextLine();
+
+            Safe safe = new Safe();
+
+            for(int j = 0; j < n; j++) {
+                int x = scanner.nextInt();
+                safe.add(j, x);
+            }
+
+            scanner.nextLine();
+            sb.append(safe.getAll() + "\n");
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Safe {
+        private int[] value = new int[100];
+
+        private int korean;
+        private int japanese;
+        private int chinese;
+
+        public Safe() {
+            for (int i = 0; i < value.length; i++) {
+                value[i] = 0;
+            }
+
+            korean = 0;
+            japanese = 0;
+            chinese = 0;
+        }
+
+        public String getAll() {
+            return korean + " " + japanese + " " + chinese;
+        }
+
+        public void add(int i, int x) {
+            switch (i % 3) {
+                case 0:
+                    korean += x;
+                    break;
+                case 1:
+                    japanese += x;
+                    break;
+                case 2:
+                    chinese += x;
+                    break;
+            }
+        }
+    }
+}
