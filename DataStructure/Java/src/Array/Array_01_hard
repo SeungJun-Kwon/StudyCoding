@@ -2,7 +2,7 @@ package Array;
 
 import java.util.Scanner;
 
-public class Array_01 {
+public class Array_01_hard {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         StringBuilder sb = new StringBuilder();
@@ -17,6 +17,12 @@ public class Array_01 {
 
             String[] inputSplit = input.split(" ");
             String op = inputSplit[0];
+
+            if (op.equals("printArray")) {
+                sb.append(array.printArray() + "\n");
+                continue;
+            }
+
             int index = Integer.parseInt(inputSplit[1]);
             int value;
 
@@ -31,6 +37,13 @@ public class Array_01 {
                 case "add":
                     value = Integer.parseInt(inputSplit[2]);
                     array.add(index, value);
+                    break;
+                case "remove":
+                    int result = array.remove(index);
+
+                    if (result == 0) {
+                        sb.append(result + "\n");
+                    }
                     break;
             }
         }
@@ -113,6 +126,42 @@ public class Array_01 {
             } else {
                 value[++last] = x;
             }
+        }
+
+        public int remove(int i) {
+            if (i < 0 || i >= value.length) {
+                return 0;
+            }
+
+            if (value[i] == 0) {
+                return 0;
+            }
+
+            if (i == last) {
+                value[last--] = 0;
+            } else if (i < last) {
+                for (int n = i; n <= last; n++) {
+                    value[n] = value[n + 1];
+                }
+
+                value[last--] = 0;
+            }
+
+            return 1;
+        }
+
+        public String printArray() {
+            String print = "";
+
+            if (last == -1 || value[0] == 0) {
+                print = "0";
+            } else {
+                for (int i = 0; i <= last; i++) {
+                    print += value[i] + " ";
+                }
+            }
+
+            return print;
         }
     }
 }
