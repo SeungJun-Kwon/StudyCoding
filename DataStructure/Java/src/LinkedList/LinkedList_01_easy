@@ -1,6 +1,5 @@
 package LinkedList;
 
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class LinkedList_01_easy {
@@ -11,7 +10,7 @@ public class LinkedList_01_easy {
         int t = scanner.nextInt();
         scanner.nextLine();
 
-        LinkedList<Integer> linkedList = new LinkedList<>();
+        LinkedList linkedList = new LinkedList();
 
         for (int i = 0; i < t; i++) {
             String input = scanner.nextLine();
@@ -20,28 +19,16 @@ public class LinkedList_01_easy {
             switch (inputSplit[0]) {
                 case "addFront":
                     int x = Integer.parseInt(inputSplit[1]);
-                    linkedList.addFirst(x);
+                    linkedList.addFront(x);
                     break;
                 case "removeFront":
-                    if (linkedList.isEmpty()) {
-                        sb.append("-1\n");
-                    } else {
-                        sb.append(linkedList.removeFirst() + "\n");
-                    }
+                    sb.append(linkedList.removeFront() + "\n");
                     break;
                 case "front":
-                    if (linkedList.isEmpty()) {
-                        sb.append("-1\n");
-                    } else {
-                        sb.append(linkedList.getFirst() + "\n");
-                    }
+                    sb.append(linkedList.front() + "\n");
                     break;
                 case "empty":
-                    if (linkedList.isEmpty()) {
-                        sb.append("1\n");
-                    } else {
-                        sb.append("0\n");
-                    }
+                    sb.append(linkedList.empty() + "\n");
                     break;
             }
         }
@@ -49,5 +36,71 @@ public class LinkedList_01_easy {
         scanner.close();
 
         System.out.println(sb);
+    }
+
+    static class LinkNode {
+        private Integer data;
+        private LinkNode link;
+
+        public LinkNode(int x) {
+            this.data = x;
+            link = null;
+        }
+
+        public Integer getData() {
+            if (data == null) {
+                return -1;
+            }
+
+            return data;
+        }
+
+        public LinkNode getNext() {
+            if (link == null) {
+                return null;
+            }
+
+            return link;
+        }
+    }
+
+    static class LinkedList {
+        private LinkNode head;
+
+        public void addFront(Integer x) {
+            LinkNode linkNode = new LinkNode(x);
+
+            if (head != null) {
+                linkNode.link = head;
+            }
+
+            head = linkNode;
+        }
+
+        public Integer removeFront() {
+            if (head == null) {
+                return -1;
+            }
+
+            int result = head.getData();
+            head = head.link;
+            return result;
+        }
+
+        public Integer front() {
+            if (head == null) {
+                return -1;
+            }
+
+            return head.getData();
+        }
+
+        public Integer empty() {
+            if (head == null) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 }
