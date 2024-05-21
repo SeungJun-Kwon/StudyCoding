@@ -1,0 +1,53 @@
+package LinkedList;
+
+import java.util.LinkedList;
+import java.util.Scanner;
+
+public class LinkedList_01_easy {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        LinkedList<Integer> linkedList = new LinkedList<>();
+
+        for (int i = 0; i < t; i++) {
+            String input = scanner.nextLine();
+            String[] inputSplit = input.split(" ");
+
+            switch (inputSplit[0]) {
+                case "addFront":
+                    int x = Integer.parseInt(inputSplit[1]);
+                    linkedList.addFirst(x);
+                    break;
+                case "removeFront":
+                    if (linkedList.isEmpty()) {
+                        sb.append("-1\n");
+                    } else {
+                        sb.append(linkedList.removeFirst() + "\n");
+                    }
+                    break;
+                case "front":
+                    if (linkedList.isEmpty()) {
+                        sb.append("-1\n");
+                    } else {
+                        sb.append(linkedList.getFirst() + "\n");
+                    }
+                    break;
+                case "empty":
+                    if (linkedList.isEmpty()) {
+                        sb.append("1\n");
+                    } else {
+                        sb.append("0\n");
+                    }
+                    break;
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+}
