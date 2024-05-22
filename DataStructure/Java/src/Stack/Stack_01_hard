@@ -1,0 +1,79 @@
+package Stack;
+
+import java.util.Scanner;
+
+public class Stack_01_hard {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        Stack stack = new Stack();
+
+        for (int i = 0; i < t; i++) {
+            String input = scanner.nextLine();
+
+            String[] inputSplit = input.split(" ");
+
+            switch (inputSplit[0]) {
+                case "push":
+                    int x = Integer.parseInt(inputSplit[1]);
+                    stack.push(x);
+                    break;
+                case "top":
+                    sb.append(stack.top() + "\n");
+                    break;
+                case "empty":
+                    sb.append(stack.empty() + "\n");
+                    break;
+                case "pop":
+                    sb.append(stack.pop() + "\n");
+                    break;
+                case "size":
+                    sb.append(stack.size() + "\n");
+                    break;
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Stack {
+        private final static int MAX = 10000;
+        int[] value = new int[MAX];
+
+        int top = -1;
+
+        public Stack() {
+            for (int i = 0; i < MAX; i++) {
+                value[i] = 0;
+            }
+
+            top = -1;
+        }
+
+        public int empty() {
+            return top == -1 ? 1 : 0;
+        }
+
+        public int top() {
+            return top == -1 ? -1 : value[top];
+        }
+
+        public void push(int x) {
+            value[++top] = x;
+        }
+
+        public int pop() {
+            return top == -1 ? -1 : value[top--];
+        }
+
+        public int size() {
+            return top + 1;
+        }
+    }
+}
