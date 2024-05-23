@@ -1,0 +1,119 @@
+package Queue;
+
+import java.util.Scanner;
+
+public class Queue_02_hard {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < t; i++) {
+            int size = scanner.nextInt();
+            scanner.nextLine();
+
+            Queue p1 = new Queue(size);
+            Queue p2 = new Queue(size);
+            int point_p1 = 0;
+            int point_p2 = 0;
+            int remain_p1 = 0;
+            int remain_p2 = 0;
+
+            String input_p1 = scanner.nextLine();
+            String[] inputSplit_p1 = input_p1.split(" ");
+
+            String input_p2 = scanner.nextLine();
+            String[] inputSplit_p2 = input_p2.split(" ");
+
+            for(int j = 0; j < size; j++) {
+                p1.enqueue(Integer.parseInt(inputSplit_p1[j]));
+                p2.enqueue(Integer.parseInt(inputSplit_p2[j]));
+            }
+
+            for (int j = 0; j < size; j++) {
+                int front_p1 = p1.dequeue() + remain_p1;
+                int front_p2 = p2.dequeue() + remain_p2;
+
+                if (front_p1 > front_p2) {
+                    point_p1++;
+                    remain_p1 = front_p1 - front_p2 - 1;
+                    remain_p2 = 0;
+                } else if (front_p1 < front_p2) {
+                    point_p2++;
+                    remain_p1 = 0;
+                    remain_p2 = front_p2 - front_p1 - 1;
+                } else if (front_p1 == front_p2) {
+                    point_p1++;
+                    point_p2++;
+                    remain_p1 = 0;
+                    remain_p2 = 0;
+                }
+            }
+
+            if (point_p1 > point_p2) {
+                sb.append("1\n");
+            } else if (point_p1 < point_p2) {
+                sb.append("2\n");
+            } else if (point_p1 == point_p2) {
+                sb.append("0\n");
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Queue {
+        int[] value = new int[10000];
+
+        int size = 0;
+        int front = 0;
+        int rear = -1;
+
+        public Queue(int size) {
+            this.size = size;
+            front = 0;
+            rear = -1;
+
+            for (int i = 0; i < value.length; i++) {
+                value[i] = 0;
+            }
+        }
+
+        public boolean enqueue(int x) {
+            if (rear - front + 1 == size) {
+                return false;
+            }
+
+            value[++rear] = x;
+            return true;
+        }
+
+        public int dequeue() {
+            if (rear - front < 0) {
+                return -1;
+            }
+
+            return value[front++];
+        }
+
+        public int size() {
+            return rear - front + 1;
+        }
+
+        public int isEmpty() {
+            return rear - front == -1 ? 1 : 0;
+        }
+
+        public int front() {
+            return rear - front < 0 ? -1 : value[front];
+        }
+
+        public int rear() {
+            return rear - front < 0 ? -1 : value[rear];
+        }
+    }
+}
