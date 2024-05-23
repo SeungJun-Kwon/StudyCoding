@@ -1,0 +1,122 @@
+package Queue;
+
+import java.util.Scanner;
+
+public class Queue_01_hard {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int size = scanner.nextInt();
+        scanner.nextLine();
+
+        Queue queue = new Queue(size);
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        int x;
+
+        for (int j = 0; j < n; j++) {
+            String input = scanner.nextLine();
+            String[] inputSplit = input.split(" ");
+
+            String op = inputSplit[0];
+
+            switch (op) {
+                case "enqueue":
+                    x = Integer.parseInt(inputSplit[1]);
+                    boolean result = queue.enqueue(x);
+                    if (!result) {
+                        sb.append("Full\n");
+                    }
+                    break;
+                case "dequeue":
+                    int deq = queue.dequeue();
+                    if (deq == -1) {
+                        sb.append("Empty\n");
+                    } else {
+                        sb.append(deq + "\n");
+                    }
+                    break;
+                case "size":
+                    sb.append(queue.size() + "\n");
+                    break;
+                case "isEmpty":
+                    sb.append(queue.isEmpty() + "\n");
+                    break;
+                case "front":
+                    int front = queue.front();
+                    if (front == -1) {
+                        sb.append("Empty\n");
+                    } else {
+                        sb.append(front + "\n");
+                    }
+                    break;
+                case "rear":
+                    int rear = queue.rear();
+                    if (rear == -1) {
+                        sb.append("Empty\n");
+                    } else {
+                        sb.append(rear + "\n");
+                    }
+                    break;
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Queue {
+        int[] value = new int[10000];
+
+        int size = 0;
+        int front = 0;
+        int rear = -1;
+
+        public Queue(int size) {
+            this.size = size;
+            front = 0;
+            rear = -1;
+
+            for (int i = 0; i < value.length; i++) {
+                value[i] = 0;
+            }
+        }
+
+        public boolean enqueue(int x) {
+            if (rear - front + 1 == size) {
+                return false;
+            }
+
+            value[++rear] = x;
+            return true;
+        }
+
+        public int dequeue() {
+            if (rear - front < 0) {
+                return -1;
+            }
+
+            return value[front++];
+        }
+
+        public int size() {
+            return rear - front + 1;
+        }
+
+        public int isEmpty() {
+            return rear - front == -1 ? 1 : 0;
+        }
+
+        public int front() {
+            return rear - front < 0 ? -1 : value[front];
+        }
+
+        public int rear() {
+            return rear - front < 0 ? -1 : value[rear];
+        }
+    }
+}
