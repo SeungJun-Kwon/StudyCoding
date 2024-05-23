@@ -1,0 +1,78 @@
+package Queue;
+
+import java.util.Scanner;
+
+public class Queue_01_easy {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int size = scanner.nextInt();
+        scanner.nextLine();
+
+        Queue queue = new Queue(size);
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int j = 0; j < n; j++) {
+            String input = scanner.nextLine();
+            String[] inputSplit = input.split(" ");
+
+            String op = inputSplit[0];
+
+            switch (op) {
+                case "enqueue":
+                    int x = Integer.parseInt(inputSplit[1]);
+                    boolean result = queue.enqueue(x);
+                    if (!result) {
+                        sb.append("Full\n");
+                    }
+                    break;
+                case "size":
+                    sb.append(queue.size() + "\n");
+                    break;
+                case "isEmpty":
+                    sb.append(queue.isEmpty() + "\n");
+                    break;
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Queue {
+        int[] value = new int[10000];
+
+        int size = 0;
+        int tail = -1;
+
+        public Queue(int size) {
+            this.size = size;
+            tail = -1;
+
+            for (int i = 0; i < value.length; i++) {
+                value[i] = 0;
+            }
+        }
+
+        public boolean enqueue(int x) {
+            if (tail + 1 == size) {
+                return false;
+            }
+
+            value[++tail] = x;
+            return true;
+        }
+
+        public int size() {
+            return tail + 1;
+        }
+
+        public int isEmpty() {
+            return tail == -1 ? 1 : 0;
+        }
+    }
+}
