@@ -1,0 +1,118 @@
+package HashTable;
+
+import java.util.Scanner;
+
+public class HashTable_01_easy {
+
+    private static final int MAX = 353333;
+
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < t; i++) {
+            Arr[] hashArr = new Arr[MAX];
+
+            int n = scanner.nextInt();
+            scanner.nextLine();
+
+            for (int j = 0; j < n; j++) {
+                int x = scanner.nextInt();
+
+                int hash = hashFunc(x);
+
+                // null이 아니면서 값이 존재하면 probing
+                if (hashArr[hash] != null && hashArr[hash].isFlag()) {
+                    while (hashArr[hash] != null && hashArr[hash].isFlag()) {
+                        hash++;
+                    }
+                }
+
+                Item item = new Item(hash, x);
+                hashArr[hash] = new Arr(item, true);
+            }
+
+            scanner.nextLine();
+
+            int m = scanner.nextInt();
+            scanner.nextLine();
+
+            for (int j = 0; j < m; j++) {
+                int x = scanner.nextInt();
+
+                int hash = hashFunc(x);
+                int probing = 1;
+
+                if(hashArr[hash] == null) {
+                    sb.append("0 1\n");
+                    continue;
+                }
+
+                // 값이 존재하지만 일치하지 않을 경우 probing 탐색
+                while (hashArr[hash].isFlag() && !hashArr[hash].getData().getValue().equals(x)) {
+                    hash++;
+                    probing++;
+                }
+
+                if (hashArr[hash].isFlag()) {
+                    sb.append("1 " + probing + "\n");
+                } else {
+                    sb.append("0 1\n");
+                }
+            }
+            scanner.nextLine();
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Item {
+        private Integer key;
+        private Integer value;
+
+        public Integer getKey() {
+            return key;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
+
+        public Item(int key, int value) {
+            this.key = key;
+            this.value = value;
+        }
+    }
+
+    static class Arr {
+        private Item data;
+        private boolean flag;
+
+        public Item getData() {
+            return data;
+        }
+
+        public boolean isFlag() {
+            return flag;
+        }
+
+        public Arr() {
+            data = null;
+            flag = false;
+        }
+
+        public Arr(Item data, boolean flag) {
+            this.data = data;
+            this.flag = flag;
+        }
+    }
+
+    static int hashFunc(int idx) {
+        return idx % MAX;
+    }
+}
