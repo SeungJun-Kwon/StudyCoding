@@ -1,0 +1,125 @@
+package Tree;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Tree_01_hard {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        Tree root = new Tree();
+        root.setData(1);
+
+        for (int j = 0; j < n; j++) {
+
+            String input = scanner.nextLine();
+            String[] inputSplit = input.split(" ");
+
+            String op = inputSplit[0];
+
+            switch (op) {
+                case "insert":
+                    int x = Integer.parseInt(inputSplit[1]);
+                    int y = Integer.parseInt(inputSplit[2]);
+
+                    Tree parent = root.getTree(root, x);
+                    parent.insert(y);
+                    break;
+                case "printChild":
+                    x = Integer.parseInt(inputSplit[1]);
+                    Tree tree = root.getTree(root, x);
+
+                    for(Tree child : tree.getChildList()) {
+                        sb.append(child.getData() + " ");
+                    }
+                    sb.append("\n");
+                    break;
+                case "printDepth":
+                    x = Integer.parseInt(inputSplit[1]);
+                    int depth = root.getDepth(root, x, 0);
+                    sb.append(depth + "\n");
+                    break;
+            }
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Tree {
+        private int data;
+        private List<Tree> childList;
+
+        public Tree() {
+            data = 0;
+            childList = new ArrayList<>();
+        }
+
+        public int getData() {
+            return this.data;
+        }
+
+        public void setData(int x) {
+            this.data = x;
+        }
+
+        public List<Tree> getChildList() {
+            return this.childList;
+        }
+
+        public void addChild(Tree child) {
+            this.childList.add(child);
+        }
+
+        public void insert(int x) {
+            Tree tree = new Tree();
+            tree.setData(x);
+
+            this.childList.add(tree);
+        }
+
+        public Tree getTree(Tree parent, int x) {
+            if (parent.data == x) {
+                return parent;
+            }
+            else if (parent.getChildList() == null || parent.getChildList().isEmpty()) {
+                return null;
+            }
+
+            for (Tree child : parent.getChildList()) {
+                Tree result = getTree(child, x);
+
+                if (result != null) {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        public int getDepth(Tree parent, int x, int depth) {
+            if (parent.data == x) {
+                return depth;
+            }
+            else if (parent.getChildList() == null || parent.getChildList().isEmpty()) {
+                return -1;
+            }
+
+            for (Tree child : parent.getChildList()) {
+                int result = getDepth(child, x, depth + 1);
+
+                if (result != -1) {
+                    return result;
+                }
+            }
+
+            return -1;
+        }
+    }
+}
