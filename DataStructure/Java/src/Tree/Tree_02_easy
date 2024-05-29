@@ -1,0 +1,109 @@
+package Tree;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Tree_02_easy {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int n = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < n; i++) {
+            Tree root = new Tree();
+            root.setData(1);
+
+            int m = scanner.nextInt();
+            scanner.nextLine();
+
+            for (int j = 0; j < m; j++) {
+                int x = scanner.nextInt();
+                int y = scanner.nextInt();
+                scanner.nextLine();
+
+                Tree tree = root.getTree(root, x);
+                tree.insert(y);
+            }
+
+            sb.append(root.preOrder(root, new StringBuilder()) + "\n");
+            sb.append(root.postOrder(root, new StringBuilder()) + "\n");
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    static class Tree {
+        private int data;
+        private List<Tree> childList;
+
+        public Tree() {
+            data = 0;
+            childList = new ArrayList<>();
+        }
+
+        public int getData() {
+            return this.data;
+        }
+
+        public void setData(int x) {
+            this.data = x;
+        }
+
+        public List<Tree> getChildList() {
+            return this.childList;
+        }
+
+        public void addChild(Tree child) {
+            this.childList.add(child);
+        }
+
+        public void insert(int x) {
+            Tree tree = new Tree();
+            tree.setData(x);
+
+            this.childList.add(tree);
+        }
+
+        public Tree getTree(Tree parent, int x) {
+            if (parent.data == x) {
+                return parent;
+            } else if (parent.getChildList() == null || parent.getChildList().isEmpty()) {
+                return null;
+            }
+
+            for (Tree child : parent.getChildList()) {
+                Tree result = getTree(child, x);
+
+                if (result != null) {
+                    return result;
+                }
+            }
+
+            return null;
+        }
+
+        public StringBuilder preOrder(Tree parent, StringBuilder result) {
+            result.append(parent.getData() + " ");
+
+            for (Tree child : parent.getChildList()) {
+                child.preOrder(child, result);
+            }
+
+            return result;
+        }
+
+        public StringBuilder postOrder(Tree parent, StringBuilder result) {
+            for(Tree child : parent.getChildList()) {
+                child.postOrder(child, result);
+            }
+
+            result.append(parent.getData() + " ");
+            return result;
+        }
+    }
+}
