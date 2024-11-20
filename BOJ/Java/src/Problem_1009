@@ -1,0 +1,45 @@
+import java.util.Scanner;
+
+public class Problem_1009 {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < t; i++) {
+            int a = scanner.nextInt();
+            int b = scanner.nextInt();
+
+            scanner.nextLine();
+
+            int lastDigit = lastDigit(a, b);
+
+            sb.append(lastDigit + "\n");
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    public static int lastDigit(int a, int b) {
+        if (b == 0) {
+            return 1;
+        }
+        
+        a = a % 10;
+        if (a == 0 || a == 1 || a == 5 || a == 6) {
+            return a;
+        }
+        
+        b = b % 4;
+        if (b == 0) {
+            b = 4;
+        }
+        
+        return (int) Math.pow(a, b) % 10;
+    }
+
+}
