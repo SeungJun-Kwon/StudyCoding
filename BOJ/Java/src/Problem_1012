@@ -1,0 +1,76 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class Problem_1012 {
+    public static void main(String[] args) throws Exception {
+        Scanner scanner = new Scanner(System.in);
+        StringBuilder sb = new StringBuilder();
+
+        int t = scanner.nextInt();
+        scanner.nextLine();
+
+        for (int i = 0; i < t; i++) {
+            int m = scanner.nextInt();
+            int n = scanner.nextInt();
+            int k = scanner.nextInt();
+
+            int[][] field = new int[n][m];
+            boolean[][] visited = new boolean[n][m];
+
+            scanner.nextLine();
+
+            for(int j = 0; j < k; j ++) {
+                int x = scanner.nextInt();
+                int y = scanner.nextInt();
+
+                field[y][x] = 1;
+
+                scanner.nextLine();
+            }
+
+            sb.append(search(field, visited) + "\n");
+        }
+
+        scanner.close();
+
+        System.out.println(sb);
+    }
+
+    private static int search(int field[][], boolean visited[][]) {
+        int result = 0;
+
+        int[] dx = {0, -1, 1, 0};
+        int[] dy = {-1, 0, 0, 1};
+
+        Queue<int[]> queue = new LinkedList<>();
+
+        for(int i = 0; i < field.length; i++) {
+            for(int j = 0; j < field[i].length; j++) {
+                if(field[i][j] == 1 && !visited[i][j]) {
+                    queue.add(new int[]{i, j});
+                    visited[i][j] = true;
+                    result ++;
+
+                    while(!queue.isEmpty()) {
+                        int[] point = queue.poll();
+
+                        for(int k = 0; k < 4; k++) {
+                            int x = point[1] + dx[k];
+                            int y = point[0] + dy[k];
+
+                            if(x >= 0 && y >= 0 && x < field[i].length && y < field.length && field[y][x] == 1 && !visited[y][x]) {
+                                queue.add(new int[]{y, x});
+                                visited[y][x] = true;
+                            }
+                        }
+                    }
+
+                    System.out.println();
+                }
+            }
+        }
+
+        return result;
+    }
+}
