@@ -1,0 +1,99 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
+// https://school.programmers.co.kr/learn/courses/30/lessons/49994
+public class VisitLength {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        // 명령어 입력
+        String dirs = sc.nextLine();
+
+        System.out.println(Solution.solution(dirs));
+    }
+
+    public static class Solution {
+        public static int solution(String dirs) {
+            int answer = 0;
+
+            Map<String, List<Character>> visit_map = new HashMap<>();
+
+            int start_x = 5;
+            int start_y = 5;
+
+            int cur_x = start_x;
+            int cur_y = start_y;
+
+            int move_x = 0;
+            int move_y = 0;
+
+            char reverse_dir = 0;
+
+            for(char dir : dirs.toCharArray()) {
+                switch(dir) {
+                    case 'U':
+                        move_x = cur_x;
+                        move_y = cur_y + 1;
+                        reverse_dir = 'D';
+                        break;
+                    case 'L':
+                        move_x = cur_x - 1;
+                        move_y = cur_y;
+                        reverse_dir = 'R';
+                        break;
+                    case 'R':
+                        move_x = cur_x + 1;
+                        move_y = cur_y;
+                        reverse_dir = 'L';
+                        break;
+                    case 'D':
+                        move_x = cur_x;
+                        move_y = cur_y - 1;
+                        reverse_dir = 'U';
+                        break;
+                    default:
+                        move_x = 0;
+                        move_y = 0;
+                        break;
+                }
+
+                if (!enableMove(move_x, move_y)) {
+                    continue;
+                }
+
+                if (!visit_map.containsKey(cur_x + "" + cur_y)) {
+                    visit_map.put(cur_x + "" + cur_y, new ArrayList<>());
+                }
+                if (!visit_map.containsKey(move_x + "" + move_y)) {
+                    visit_map.put(move_x + "" + move_y, new ArrayList<>());
+                }
+
+                System.out.print((cur_x - 5) + ", " + (cur_y - 5) + " -> " + (move_x - 5) + ", " + (move_y - 5));
+
+                // 해당 좌표 - 목적 좌표 처음 방문
+                // 목적 좌표 - 해당 좌표 처음 방문
+                // -> 해당 길 처음 방문
+                if ((visit_map.containsKey(cur_x + "" + cur_y) && !visit_map.get(cur_x + "" + cur_y).contains(dir))
+                    && (visit_map.containsKey(move_x + "" + move_y) && !visit_map.get(move_x + "" + move_y).contains(reverse_dir))) {
+                    answer++;
+                    visit_map.get(cur_x + "" + cur_y).add(dir);
+                    System.out.print(" --- NEW!");
+                }
+
+                cur_x = move_x;
+                cur_y = move_y;
+
+                System.out.println();
+            }
+
+            return answer;
+        }
+    }
+
+    static Boolean enableMove(int next_x, int next_y) {
+        return (next_x >= 0 && next_x < 11 && next_y >= 0 && next_y < 11);
+    }
+}
