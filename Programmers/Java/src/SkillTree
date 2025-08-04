@@ -1,0 +1,157 @@
+import java.util.Scanner;
+
+// https://school.programmers.co.kr/learn/courses/30/lessons/49993
+public class SkillTree {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+
+        // 명령어 입력
+        String skill = sc.nextLine();
+
+        String[] skill_trees = new String[4];
+        for(int i = 0; i < 4; i++) {
+            skill_trees[i] = sc.nextLine();
+        }
+
+        Solution solution = new Solution();
+
+        System.out.println(solution.solution(skill, skill_trees));
+    }
+
+    static class Solution {
+        public int solution(String skill, String[] skill_trees) {
+            int answer = 0;
+
+            SkillNode start_node = null;
+            SkillNode prev_node = new SkillNode();
+            SkillNode cur_node = new SkillNode();
+            for (String s : skill.split("")) {
+                SkillNode node = new SkillNode(s);
+
+                if (prev_node.getSkill().isEmpty()) {
+                    prev_node = node;
+                    start_node = node;
+                }
+                else {
+                    cur_node = node;
+                    prev_node.setNextSkill(cur_node);
+                    cur_node.setPrevSkill(prev_node);
+                    prev_node = node;
+                }
+            }
+
+            for (String tree : skill_trees) {
+                boolean flag = true;
+
+                cur_node = start_node;
+
+                // 스킬 학습 여부 초기화
+                while(cur_node != null) {
+                    cur_node.setLearned(false);
+                    cur_node = cur_node.getNextSKill();
+                }
+
+                // 스킬트리에서 스킬 하나씩
+                for (String s : tree.split("")) {
+                    cur_node = start_node;  // 시작 스킬 노드부터 탐색
+
+                    while(cur_node != null) {
+                        if (cur_node.getSkill().equals(s)) {    // 현재 스킬(s)와 현재 노드의 스킬이 같다면
+                            /*
+                            1. 선행 스킬이 있다 -> 선행 스킬 습득 여부 조건
+                            2. 선행 스킬이 없다 -> 현재 스킬 습득
+                             */
+                            if (cur_node.getPrevSkill() != null) {
+                                if (cur_node.getPrevSkill().isLearned()) {
+                                    cur_node.setLearned(true);
+                                }
+                                else {
+                                    flag = false;
+                                }
+                            }
+                            else {
+                                cur_node.setLearned(true);
+                            }
+
+                            break;
+                        }
+                        else {
+                            cur_node = cur_node.getNextSKill();
+                        }
+                    }
+
+                    if (!flag) {
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    answer++;
+                }
+            }
+
+            return answer;
+        }
+    }
+
+    static class SkillNode {
+        private String skill;
+        private SkillNode prev_node;
+        private SkillNode next_node;
+        private boolean learned;
+
+        public SkillNode() {
+            skill = "";
+            prev_node = null;
+            next_node = null;
+            learned = false;
+        }
+
+        public SkillNode(String skill) {
+            this.skill = skill;
+            prev_node = null;
+            next_node = null;
+            learned = false;
+        }
+
+        public String getSkill() {
+            return skill;
+        }
+
+        public void setSkill(String skill) {
+            this.skill = skill;
+        }
+
+        public SkillNode getPrevSkill() {
+            return prev_node;
+        }
+
+        public void setPrevSkill(SkillNode prev_node) {
+            this.prev_node = prev_node;
+        }
+
+        public SkillNode getNextSKill() {
+            return next_node;
+        }
+
+        public void setNextSkill(SkillNode next_node) {
+            this.next_node = next_node;
+        }
+
+        public boolean isLearned() {
+            return learned;
+        }
+
+        public void setLearned(boolean learned) {
+            this.learned = learned;
+        }
+
+        public boolean hasPrevNode() {
+            return prev_node != null;
+        }
+
+        public boolean hasNextNode() {
+            return next_node != null;
+        }
+    }
+}
